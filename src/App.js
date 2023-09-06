@@ -1,60 +1,81 @@
-// import { withAuthenticator } from '@aws-amplify/ui-react';
-import { useState, useEffect } from 'react';
+import { useEffect, useReducer } from 'react';
 // Import the API category from AWS Amplify
 import { API } from 'aws-amplify';
+import { List } from 'antd';
+// import 'antd/dist/antd.css'; // Not necessary nowadays(2023)
+import { listNotes } from './graphql/queries';
 import './App.css';
-// import '@aws-amplify/ui-react/styles.css';
+
+// Initial state to be used with the reducer
+const initialState = {
+  notes: [],
+  loading: true,
+  error: false,
+  form: { name: '', description: '' }
+};
+// reducer function
+function reducer(state, action) {
+  switch(action.type) {
+    case 'SET_NOTES':
+      return { ...state, notes: action.notes, loading: false };
+    case 'ERROR':
+      return { ...state, loading: false, error: true };
+    default:
+      return state;
+  }
+}
+// Styles for the component
+const styles = {
+  container: { padding: 20 },
+  input: { marginBottom: 10 },
+  item: { textAlign: 'left' },
+  p: { color: '#1880ff' },
+};
 
 function App({ signOut, user }) {
-  // coins variable and its update function
-  const [coins, updateCoins] = useState([]);
-  // Create additional state to hold user input for limit and start properties
-  const [input, updateInput] = useState({ limit: 5, start: 0 });
-
-  // Create a new function to allow users to update the input values
-  function updateInputValues(type, value) {
-    updateInput({ ...input, [type]: value });
+  // reducer hook to manage state and dispatch function
+  const [state, dispatch] = useReducer(reducer,initialState);
+  // Create fetchNotes function to fetch the notes
+  async function fetchNotes() {
+    try {
+      const notesData = await API.graphql({
+        query: listNotes
+      });
+      dispatch({ type: 'SET_NOTES', notes: notesData.data.listNotes.items });
+    } catch (error) {
+      console.log('error: ', error);
+      dispatch({ type: 'ERROR' })
+    }
   }
-
-  // Update fetchCoins function to use limit and start properties
-  async function fetchCoins() {
-    const { limit, start } = input;
-    const data = await API.get('cryptoapi', `/coins?limit=${limit}&start=${start}`);
-    updateCoins(data.coins);
-  }
-
-  // Call fetchCoins function when component loads
+  // Invoque the fetchNotes by implementing the useEffect hook
   useEffect(() => {
-    fetchCoins();
+    fetchNotes();
   }, []);
+
+  // Define the renderItem function
+  function renderItem(item) {
+    return (
+      <List.Item style={styles.item}>
+        <List.Item.Meta
+          title={item.name}
+          description={item.description}
+        />
+      </List.Item>
+    );
+  }
 
   return (
     <div className="App">
       <header className="App-header">
-        {/* Add input fields to the UI for user input */}
-        <div>
-          <input
-            onChange={e => updateInputValues('limit', e.target.value)}
-            placeholder="limit"
-          />
-        </div>
-        <div>
-          <input
-            onChange={e => updateInputValues('start', e.target.value)}
-            placeholder="start"
-          />
-        </div>
-        {/* Add button to the UI to give user the option rto call the APi */}
-        <div><button onClick={fetchCoins}>Fetch Coins</button></div>
+        <h1>Notes App</h1>
       </header>
-      {
-        coins.map((coin, index) => (
-          <div key={index}>
-            <h2>{coin.name} - {coin.symbol}</h2>
-            <h5>${coin.price_usd} USD</h5>
-          </div>
-        ))
-      }
+      <main style={styles.container}>
+        <List
+          loading={state.loading}
+          dataSource={state.notes}
+          renderItem={renderItem}
+        />
+      </main>
     </div>
   );
 }
