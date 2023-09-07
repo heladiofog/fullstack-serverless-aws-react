@@ -6,7 +6,10 @@ import { List, Input, Button } from 'antd';
 // import 'antd/dist/antd.css'; // Not necessary nowadays(2023)
 import { v4 as uuid } from 'uuid';
 import { listNotes } from './graphql/queries';
-import { createNote as CreateNote } from './graphql/mutations';
+import {
+  createNote as CreateNote,
+  deleteNote as DeleteNote
+ } from './graphql/mutations';
 import './App.css';
 
 // UUID
@@ -22,6 +25,7 @@ const initialState = {
 function reducer(state, action) {
   switch(action.type) {
     case 'SET_NOTES':
+      // console.log(action.notes);
       return { ...state, notes: action.notes, loading: false };
     case 'ADD_NOTE':
       return { ...state, notes: [action.note, ...state.notes] };
@@ -48,6 +52,19 @@ function App({ signOut, user }) {
   // reducer hook to manage state and dispatch function
   const [state, dispatch] = useReducer(reducer,initialState);
 
+  // Create fetchNotes function to fetch the notes
+  async function fetchNotes() {
+    try {
+      const notesData = await API.graphql({
+        query: listNotes
+      });
+      dispatch({ type: 'SET_NOTES', notes: notesData.data.listNotes.items });
+    } catch (error) {
+      console.log('error: ', error);
+      dispatch({ type: 'ERROR' })
+    }
+  }
+
   // Create Note
   async function createNote() {
     const { form } = state;
@@ -71,16 +88,24 @@ function App({ signOut, user }) {
     }
   }
 
-  // Create fetchNotes function to fetch the notes
-  async function fetchNotes() {
+  // Delete a note
+  async function deleteNote({ id }) {
+    const noteIndex = state.notes.findIndex(note => note.id === id);
+    // local state update
+    const updatedNotes = [
+      ...state.notes.slice(0, noteIndex),
+      ...state.notes.slice(noteIndex + 1)
+    ];
+    dispatch({ type: 'SET_NOTES', notes: updatedNotes });
+    // remote data update
     try {
-      const notesData = await API.graphql({
-        query: listNotes
+      await API.graphql({
+        query: DeleteNote,
+        variables: { input: { id } }
       });
-      dispatch({ type: 'SET_NOTES', notes: notesData.data.listNotes.items });
+      console.log('Successfully deleted note!');
     } catch (error) {
-      console.log('error: ', error);
-      dispatch({ type: 'ERROR' })
+      console.log({ error });
     }
   }
 
@@ -92,7 +117,12 @@ function App({ signOut, user }) {
   // Define the renderItem function
   function renderItem(item) {
     return (
-      <List.Item style={styles.item}>
+      <List.Item
+        style={styles.item}
+        actions={[
+          <a style={styles.p} onClick={() => deleteNote(item)}>Delete</a>
+        ]}
+      >
         <List.Item.Meta
           title={item.name}
           description={item.description}
