@@ -8,7 +8,8 @@ import { v4 as uuid } from 'uuid';
 import { listNotes } from './graphql/queries';
 import {
   createNote as CreateNote,
-  deleteNote as DeleteNote
+  updateNote as UpdateNote,
+  deleteNote as DeleteNote,
  } from './graphql/mutations';
 import './App.css';
 
@@ -87,6 +88,29 @@ function App({ signOut, user }) {
       // Hypothetically you should be able to refresh the state and manage the error accordingly
     }
   }
+  // Update a Note
+  async function updateNote(updatedNote) {
+    const noteIndex = state.notes.findIndex(note => note.id === updatedNote.id);
+    const notes = [...state.notes];
+    notes[noteIndex].completed = !updatedNote.completed;
+    // update first local state
+    dispatch({ type: 'SET_NOTES', notes});
+    // Now update the remote data
+    try {
+      await API.graphql({
+        query: UpdateNote,
+        variables: {
+          input: {
+            id: updatedNote.id,
+            completed: notes[noteIndex].completed
+          }
+        }
+      });
+      console.log('Note successfully updated!');
+    } catch (error) {
+      console.log('Error:', error);
+    }
+  }
 
   // Delete a note
   async function deleteNote({ id }) {
@@ -120,7 +144,10 @@ function App({ signOut, user }) {
       <List.Item
         style={styles.item}
         actions={[
-          <a style={styles.p} onClick={() => deleteNote(item)}>Delete</a>
+          <a style={styles.p} onClick={() => deleteNote(item)}>Delete</a>,
+          <a style={styles.p} onClick={() => updateNote(item)}>
+            {item.completed ? 'completed': 'mark completed'}
+          </a>,
         ]}
       >
         <List.Item.Meta
