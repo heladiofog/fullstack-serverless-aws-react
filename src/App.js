@@ -11,6 +11,7 @@ import {
   updateNote as UpdateNote,
   deleteNote as DeleteNote,
  } from './graphql/mutations';
+import { onCreateNote } from './graphql/subscriptions';
 import './App.css';
 
 // UUID
@@ -136,6 +137,29 @@ function App({ signOut, user }) {
   // Invoque the fetchNotes by implementing the useEffect hook
   useEffect(() => {
     fetchNotes();
+    // To implement subscription to the create event...
+    // based on the book and 
+    // https://docs.amplify.aws/lib/graphqlapi/subscribe-data/q/platform/js/
+    const subscription = API.graphql({
+      query: onCreateNote
+    })
+      .subscribe({
+        next: noteData => {
+          console.log({ noteData });
+          // From amplify docs:
+          // ({ provider, value }) => console.log({ provider, value }),
+          const note = noteData.value.data.onCreateNote;
+          // if the user is the producer of the event...just ignore it
+          if (CLIENT_ID === note.clientId)
+            return;
+          // else, dispatch the update reducer's action with the note received
+          console.log("I did not created the note: " + note.name);
+          dispatch({ type: 'ADD_NOTE', note });
+        },
+        error: (error) => console.warn(error)
+      });
+    // Close the subscription
+    return () => subscription.unsubscribe();
   }, []);
 
   // Define the renderItem function
