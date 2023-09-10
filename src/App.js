@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from 'react';
 // Import the API category from AWS Amplify
-import { API } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 // Import the AntDesign components and uuid
 import { List, Input, Button } from 'antd';
 // import 'antd/dist/antd.css'; // Not necessary nowadays(2023)
@@ -140,9 +140,9 @@ function App({ signOut, user }) {
     // To implement subscription to the create event...
     // based on the book and 
     // https://docs.amplify.aws/lib/graphqlapi/subscribe-data/q/platform/js/
-    const subscription = API.graphql({
-      query: onCreateNote
-    })
+    const subscription = API.graphql(
+      graphqlOperation(onCreateNote)
+    )
       .subscribe({
         next: noteData => {
           console.log({ noteData });
