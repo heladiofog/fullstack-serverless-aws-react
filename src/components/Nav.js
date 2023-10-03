@@ -7,12 +7,41 @@ import {
 } from '@ant-design/icons';
 
 const Nav = (props) => {
-  const { current } = props;
+  const { current, setCurrent } = props;
+  console.log('Nav current: ' + current);
+
+  const items = [
+    {
+      label: (<Link to='/'>Home</Link>),
+      key: 'home',
+      icon: <HomeOutlined />,
+    },
+    {
+      label: (<Link to='/profile'>Profile</Link>),
+      key: 'profile',
+      icon: <ProfileOutlined />,
+    },
+    {
+      label: (<Link to='/protected'>Protected</Link>),
+      key: 'protected',
+      icon: <FileProtectOutlined />,
+    },
+  ];
+
+  const onClick = (e) => {
+    console.log('click ', e);
+    setCurrent(e.key);
+  };
 
   return(
     <div>
-      <Menu selectedKeys={[current]} mode="horizontal">
-        <Menu.Item key='home'>
+      <Menu
+        selectedKeys={[current]}
+        mode="horizontal"
+        items={items}
+        onClick={onClick}
+      >
+        {/* <Menu.Item key='home'>
           <Link to={`/`}>
             <HomeOutlined /> Home
           </Link>
@@ -26,7 +55,7 @@ const Nav = (props) => {
           <Link to={'/protected'}>
             <FileProtectOutlined /> Protected
           </Link>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
     </div>
   );

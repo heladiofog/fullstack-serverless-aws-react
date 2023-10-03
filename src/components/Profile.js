@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react";
-import { Auth  } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import {
   withAuthenticator,
-  // AmplifySignOut
+  // AmplifySignOut // as detailed on Aplify 2023 docs
 } from "@aws-amplify/ui-react";
+import '@aws-amplify/ui-react/styles.css';
 import Container from "./Container";
 
 function Profile({ signOut }) {
   useEffect(() => {
     checkUser();
-  });
+  }, []);
 
   const [user, setUser] = useState({});
 
   async function checkUser() {
     try {
       const data = await Auth.currentUserPoolUser();
+      console.log(data);
       const userInfo = {
         username: data.username,
         ...data.attributes,
