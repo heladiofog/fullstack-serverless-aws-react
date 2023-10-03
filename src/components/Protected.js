@@ -1,24 +1,7 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
 import Container from './Container';
-
-import { createHashHistory } from "history";
-let history = createHashHistory();
+import protectedRoute from './ProtectedRoute';
 
 function Protected(props) {
-  const navigate = useNavigate();
-  useEffect(() => {
-    Auth.currentAuthenticatedUser()
-      .catch((error) => {
-        // The user is not singned in, redirect him
-        console.log("Error", error);
-        console.log(navigate);
-        // navigate('/profile');
-        history.push('/profile');
-      });
-  }, []);
-  
   return (
     <Container>
       <h1>Protected Route</h1>
@@ -27,4 +10,4 @@ function Protected(props) {
   );
 }
 
-export default Protected;
+export default protectedRoute(Protected);
