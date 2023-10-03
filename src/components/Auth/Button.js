@@ -13,7 +13,7 @@ export default function Button({ onClick, title }) {
       height: 45,
       fontWeight: '600',
       fontSize: 14,
-      cursor: pointer,
+      cursor: 'pointer',
       border: 'none',
       outline: 'none',
       borderRadius: 3,
