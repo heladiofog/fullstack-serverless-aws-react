@@ -7,17 +7,19 @@ import Protected from './Protected';
 
 const Router = () => {
   const [current, setCurrent] = useState('home');
+
   useEffect(() => {
     // mount
     setRoute();
-    window.addEventListener('haschange', setRoute);
+    window.addEventListener('hashchange', setRoute);
     // ummounnt
-    return () => window.removeEventListener('haschange', setRoute);
+    return () => window.removeEventListener('hashchange', setRoute);
   }, []);
 
   function setRoute() {
     const location = window.location.href.split('/');
     const pathName = location[location.length - 1];
+    console.log({pathName});
     setCurrent(pathName ? pathName : 'home');
   }
 
@@ -25,10 +27,10 @@ const Router = () => {
     <HashRouter>
       <Nav current={current} />
       <Routes>
-        <Route exact path="/" component={Public} />
-        <Route exact path="/protected" component={Protected} />
-        <Route exact path="/profile" component={Profile} />
-        <Route component={Public} />
+        <Route exact path="/" element={<Public />} />
+        <Route exact path="/protected" element={<Protected />} />
+        <Route exact path="/profile" element={<Profile />} />
+        <Route element={<Public />} />
       </Routes>
     </HashRouter>
   );
