@@ -11,7 +11,7 @@ const protectedRoute = (Comp, route='/profile') =>  (props) => {
     try {
       await Auth.currentAuthenticatedUser();
     } catch (error) {
-      console.log("Error", error);
+      console.log("protectedRouteError", error);
       // history.push(route); // With history, the component is actually displayed :(
       navigate(route);
     }

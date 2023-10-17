@@ -1,10 +1,4 @@
 export default function Button({ onClick, title }) {
-  return (
-    <button style={styles.button} onClick={onClick}>
-      {title}
-    </button>
-  );
-
   const styles = {
     button: {
       backgroundColor: '#006bfc',
@@ -21,4 +15,10 @@ export default function Button({ onClick, title }) {
       boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.3)',
     },
   };
+
+  return (
+    <button style={styles.button} onClick={onClick}>
+      {title}
+    </button>
+  );
 }
