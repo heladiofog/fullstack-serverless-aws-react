@@ -113,7 +113,7 @@ function Form(props) {
             updateFormState={e => updateForm(e)}
           />
         );
-      case 'forgotPassword':
+      case 'forgotPasswordSubmit':
         return (
           <ForgotPasswordSubmit
             forgotPasswordSubmit={() => forgotPasswordSubmit(formState, updateFormType)}
@@ -141,6 +141,12 @@ function Form(props) {
       {
         formType === 'signIn' && (
           <>
+            <p style={styles.toggleForm}>
+              Need an account?  <span
+                style={styles.anchor}
+                onClick={() => updateFormType('signUp')}
+              >Sign Up</span>
+            </p>
             <p style={{ ...styles.toggleForm, ...styles.resetPassword }}>
               Forgot your password? <span
                 style={styles.anchor}

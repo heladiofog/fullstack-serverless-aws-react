@@ -1,4 +1,4 @@
-import Button from './Butto';
+import Button from './Button';
 import { styles } from './Form';
 
 function ForgotPassword(props) {

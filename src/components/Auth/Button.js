@@ -11,7 +11,7 @@ export default function Button({ onClick, title }) {
       border: 'none',
       outline: 'none',
       borderRadius: 3,
-      mardinTop: '25px',
+      marginTop: '25px',
       boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.3)',
     },
   };
