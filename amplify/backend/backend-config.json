@@ -50,6 +50,22 @@
           "resourceName": "lambdatriggerce7ece7cPostConfirmation"
         }
       ]
+    },
+    "AMPLIFY_function_lambdatriggerce7ece7cPostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "lambdatriggerce7ece7cPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_lambdatriggerce7ece7cPostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "lambdatriggerce7ece7cPostConfirmation"
+        }
+      ]
     }
   }
 }
