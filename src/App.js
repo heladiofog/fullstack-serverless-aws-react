@@ -29,7 +29,7 @@ function App({ signOut }) {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Basich Authentication App - Ch04</h1>
+        <h1>Basich Authentication App - Ch06</h1>
         { isAdmin && <p>Welcome, Admin!</p> }
       </header>
       {/* <Router /> */}
