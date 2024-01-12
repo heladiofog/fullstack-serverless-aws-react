@@ -1,5 +1,6 @@
 // import Router from './components/Router';
 import { useState, useEffect } from 'react';
+import Images from './components/Images';
 import { Auth } from 'aws-amplify';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
@@ -15,7 +16,7 @@ function App({ signOut }) {
       .then(user => updateUser(user))
       .catch(err => console.log("Error validating authenticated user", err));
   }, []);
-
+  
   let isAdmin = false;
 
   if (user) {
@@ -35,6 +36,9 @@ function App({ signOut }) {
       {/* <Router /> */}
       <h2>Hello {user?.username}</h2>
       <button onClick={signOut}>Sign out</button>
+      <main>
+        <Images />
+      </main>
     </div>
   );
 }

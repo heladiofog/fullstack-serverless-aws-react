@@ -20,8 +20,15 @@
         "lambdatriggerce7ece7cPostConfirmation": {
           "GROUP": "Admin",
           "deploymentBucketName": "amplify-lambdatrigger-dev-115814-deployment",
-          "s3Key": "amplify-builds/lambdatriggerce7ece7cPostConfirmation-427163526f32446c5268-build.zip"
+          "s3Key": "amplify-builds/lambdatriggerce7ece7cPostConfirmation-5a637461546d51784530-build.zip"
+        },
+        "S3Trigger41411c50": {
+          "deploymentBucketName": "amplify-lambdatrigger-dev-115814-deployment",
+          "s3Key": "amplify-builds/S3Trigger41411c50-3239397537484f334549-build.zip"
         }
+      },
+      "storage": {
+        "imageresizing": {}
       }
     }
   }
